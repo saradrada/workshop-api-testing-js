@@ -26,8 +26,8 @@ it('Consume GET Service with query parameters', async () => {
   expect(response.body.args).to.eql(query);
 });
 
-/* it("Consume PUT Service", async () => {
-  const response = await agent.get("https://httpbin.org/put");
+it('Consume PUT Service', async () => {
+  const response = await agent.put('https://httpbin.org/put');
 
   expect(response.status).to.equal(statusCode.OK);
-}); */
+});

@@ -1,9 +1,12 @@
 language: node_js
 cache:
 directories:
-  - node_modules
+- node_modules
 notifications:
 email: false
 branches:
 except:
-  - "/^v\\d+\\.\\d+\\.\\d+$/"
+- "/^v\\d+\\.\\d+\\.\\d+$/"
+env:
+  global:
+    secure: NLs/oMiGHkTCqDqBnmMEnfn6NM51QcH1JC/Umo092RsXy8rMssETsVrAcmZ0vPGVwnJ0yfeoalQD2Ur9bvnT3qR1prTViGlUKpipfcsok9Bf1MPTyWbA5bjpInam5tabMruSeFvYw++eFth8iMCDVmIO9kgAEAIeXFH1e5ZZId96ifIAN6vtr+EEc+UpXnD9nZ0ZhQUiRU/h969x/ONh0bYO3sh0sDVNt8jQgXCp2B9ZIfwI2qTbJPz1haXOrrBcpToGlBgsimiyXL9zU16ZMf6wUAVWmQ2hY2Rl8ayAVN4S2NbwUJlQ4P1aXg+DmwcKVf+jsa6XcDJY3YBnX2TCKBqVGrv5DyXjWGjp7FWjQiHR3pjKvGmakxM8P+K1jyNoYPiQsQsYotPisWD8kQPqJa6Ez6ecYl/AVbK7sW/8ZG7XGAMxVCyd1r8eg9+A+BgGpIfak+gaLjYqVGzF6mfAATXjOsQAnwwpQix3bshNko72zznxU930/FwNNCwj7k6vlm2lNg43+EIkm0cw4AbHC7BJft4fYXBg+KxZQw9O+AxJako9jEZm5zISvJnUS+oKYuKevTpGNVRPbstTW68FR8Xb91ioomFaESeZ66mbMw+PEiWPsOWggk+Mm5tAsLnABhnlzR6MuQmBnZ+1qH9S2srTxK56QWkG1dXNLAuxVPY=
