@@ -9,6 +9,7 @@ const repository = 'workshop-api-testing-js';
 describe('Github Api Test', () => {
   describe('Authentication', () => {
     it('Via OAuth2 Tokens by Header', async () => {
+      console.log('Token', process.env.ACCESS_TOKEN);
       const response = await agent
         .get(`${urlBase}/repos/${githubUserName}/${repository}`)
         .auth('token', process.env.ACCESS_TOKEN)
