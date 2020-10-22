@@ -9,3 +9,8 @@ extends:
   - plugin:import/warnings
 rules:
   "comma-dangle": ["error", "never"]
+overrides:
+- files:
+  - "*.test.js"
+  rules:
+    no-unused-expressions: 'off'
