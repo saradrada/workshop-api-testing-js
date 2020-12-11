@@ -15,7 +15,7 @@ describe('Scenario: Consume PUT Service', () => {
       response = await agent
         .put(`${urlBase}/user/following/${githubUserName}`)
         .set('User-Agent', 'agent')
-        .auth('token', process.env.ACCESS_TOKEN);
+        .auth('token', process.env.ACCESS_TOKEN); // For rate limiting
     });
 
     it(`When we check we're actually following ${githubUserName}'s github account`, () => {

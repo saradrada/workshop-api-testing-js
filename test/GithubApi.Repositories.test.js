@@ -20,7 +20,8 @@ describe('Github Api Test', () => {
       before(async () => {
         const response = await agent
           .get(`${urlBase}/users/${githubUserName}`)
-          .set('User-Agent', 'agent');
+          .set('User-Agent', 'agent')
+          .auth('token', process.env.ACCESS_TOKEN);
 
         user = response.body;
       });
