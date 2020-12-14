@@ -1,4 +1,4 @@
-const chai = require('chai');
+/* const chai = require('chai');
 const { expect } = chai;
 const githubUserName = 'aperdomob';
 const config = require('./GithubApi.Config');
@@ -69,7 +69,7 @@ describe('Scenario: Consume PUT Service', () => {
         list = responseList.body;
       });
 
-      it('Then the idempotency of the method is verified', () => {
+      it('Then the idempotency of the method is correct', () => {
         expect(response.status).to.equal(config.getStatusCode().NO_CONTENT);
         expect(response.body).to.be.empty;
 
@@ -85,4 +85,4 @@ describe('Scenario: Consume PUT Service', () => {
       });
     });
   });
-});
+}); */

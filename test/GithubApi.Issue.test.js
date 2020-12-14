@@ -1,4 +1,5 @@
 const chai = require('chai');
+
 const { expect } = chai;
 const githubUserName = 'saradrada';
 const config = require('./GithubApi.Config');
@@ -9,14 +10,15 @@ describe('Scenario: Consume POST and PATCH services', () => {
 
     describe(`When a GET request is sent to retrieves ${githubUserName}'s information`, () => {
       before(async () => {
-        const response = await config.getAgent()
+        const response = await config
+          .getAgent()
           .get(`${config.getBaseURL()}/user`)
           .set('User-Agent', 'agent')
           .auth('token', process.env.ACCESS_TOKEN);
         user = response.body;
       });
 
-      it('Then we check the user has at least 1 public repository', () => {
+      it('Then the user has at least 1 public repository', () => {
         expect(user.public_repos).to.be.above(0);
       });
     });
@@ -27,7 +29,8 @@ describe('Scenario: Consume POST and PATCH services', () => {
     let list;
     describe(`When a GET request is sent to get ${githubUserName}'s repository list`, () => {
       before(async () => {
-        const response = await config.getAgent()
+        const response = await config
+          .getAgent()
           .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
           .set('User-Agent', 'agent');
         list = response.body;
@@ -41,21 +44,24 @@ describe('Scenario: Consume POST and PATCH services', () => {
     });
   });
 
-  describe("Given we have the user's data", () => {
+  describe(`Given ${githubUserName}'s github account`, () => {
     let issue;
     describe('When a POST request is sent to create an issue', () => {
       before(async () => {
-        const response = await config.getAgent()
-          .post(`${config.getBaseURL()}/repos/${githubUserName}/${repository.name}/issues`)
+        issue = await config
+          .getAgent()
+          .post(
+            `${config.getBaseURL()}/repos/${githubUserName}/${
+              repository.name
+            }/issues`
+          )
           .auth('token', process.env.ACCESS_TOKEN)
           .set('User-Agent', 'agent')
-          .send({ title: 'Title 2 new issue' });
-
-        issue = response;
+          .send({ title: 'Title 3 new issue' });
       });
 
       it('Then the issue is created successfully', () => {
-        expect(issue.body.title).to.equal('Title 2 new issue');
+        expect(issue.body.title).to.equal('Title 3 new issue');
         expect(issue.body.body).to.be.null;
       });
     });
@@ -63,13 +69,37 @@ describe('Scenario: Consume POST and PATCH services', () => {
 
   describe('Given an issue', () => {
     let modifiedIssue;
-    const issueNumber = 6;
+    let issueNumber;
 
     describe('When a PATCH request is sent to modify the issue', () => {
       before(async () => {
-        const response = await config.getAgent()
-          .patch(`${config.getBaseURL()}/repos/${githubUserName}
-          /${repository.name}/issues/${issueNumber}`)
+        const req = await config
+          .getAgent()
+          .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
+          .set('User-Agent', 'agent');
+
+        repository = req.body[0];
+
+        const issue = await config
+          .getAgent()
+          .post(
+            `${config.getBaseURL()}/repos/${githubUserName}/${
+              repository.name
+            }/issues`
+          )
+          .auth('token', process.env.ACCESS_TOKEN)
+          .set('User-Agent', 'agent')
+          .send({ title: 'Issue to be modify' });
+
+        issueNumber = issue.body.number;
+
+        const response = await config
+          .getAgent()
+          .patch(
+            `${config.getBaseURL()}/repos/${githubUserName}/${
+              repository.name
+            }/issues/${issueNumber}`
+          )
           .auth('token', process.env.ACCESS_TOKEN)
           .set('User-Agent', 'agent')
           .send({ body: `Modified body of the issue number ${issueNumber}` });
@@ -78,9 +108,10 @@ describe('Scenario: Consume POST and PATCH services', () => {
       });
 
       it('Then the issue is modified', () => {
-        expect(modifiedIssue.body.title).to.equal('Title 2 new issue');
-        expect(modifiedIssue.body.body).to.equal
-        (`Modified body of the issue number ${issueNumber}`);
+        expect(modifiedIssue.body.title).to.equal('Issue to be modify');
+        expect(modifiedIssue.body.body).to.equal(
+          `Modified body of the issue number ${issueNumber}`
+        );
       });
     });
   });

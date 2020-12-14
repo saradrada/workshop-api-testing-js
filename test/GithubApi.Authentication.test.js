@@ -1,7 +1,5 @@
-const { expect } = require('chai');
+/* const { expect } = require('chai');
 const config = require('./GithubApi.Config');
-
-const urlBase = 'https://api.github.com';
 const githubUserName = 'saradrada';
 const repository = 'workshop-api-testing-js';
 
@@ -10,7 +8,7 @@ describe('Github Api Test', () => {
     it('Via OAuth2 Tokens by Header', async () => {
       const response = await config
         .getAgent()
-        .get(`${urlBase}/repos/${githubUserName}/${repository}`)
+        .get(`${config.getBaseURL()}/repos/${githubUserName}/${repository}`)
         .auth('token', process.env.ACCESS_TOKEN)
         .set('User-Agent', 'agent');
 
@@ -22,7 +20,7 @@ describe('Github Api Test', () => {
 
     it('Via OAuth2 Tokens by parameter', () => config
       .getAgent()
-      .get(`${urlBase}/repos/${githubUserName}/${repository}`)
+      .get(`${config.getBaseURL()}/repos/${githubUserName}/${repository}`)
       .query(`access_token=${process.env.ACCESS_TOKEN}`)
       .set('User-Agent', 'agent')
       .then((response) => {
@@ -32,4 +30,4 @@ describe('Github Api Test', () => {
         );
       }));
   });
-});
+}); */
