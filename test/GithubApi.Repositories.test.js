@@ -1,14 +1,10 @@
-/*  agent = require('superagent');
-const statusCode = require('http-status-codes');
 const md5 = require('md5');
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
-
 chai.use(chaiSubset);
-
 const { expect } = chai;
+const config = require('./GithubApi.Config');
 
-const urlBase = 'https://api.github.com';
 const githubUserName = 'aperdomob';
 const repositoryName = 'jasmine-awesome-report';
 
@@ -18,8 +14,9 @@ describe('Github Api Test', () => {
       let user;
       // runs once before all the test in a describe
       before(async () => {
-        const response = await agent
-          .get(`${urlBase}/users/${githubUserName}`)
+        const response = await config
+          .getAgent()
+          .get(`${config.getBaseURL()}/users/${githubUserName}`)
           .set('User-Agent', 'agent')
           .auth('token', process.env.ACCESS_TOKEN);
 
@@ -37,8 +34,9 @@ describe('Github Api Test', () => {
     describe(`Given we have the repository list of ${githubUserName} `, () => {
       let repositories;
       before(async () => {
-        const response = await agent
-          .get(`${urlBase}/users/${githubUserName}/repos`)
+        const response = await config
+          .getAgent()
+          .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
           .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
 
@@ -64,14 +62,14 @@ describe('Github Api Test', () => {
       let repoAsZip;
 
       before(async () => {
-        const response = await agent.get(
-          `${foundedRepository.svn_url}/archive/master.zip`
-        );
+        const response = await config
+          .getAgent()
+          .get(`${foundedRepository.svn_url}/archive/master.zip`);
         repoAsZip = response;
       });
 
       it('When we check that the file donwloaded properly', () => {
-        expect(repoAsZip.status).to.equal(statusCode.OK);
+        expect(repoAsZip.status).to.equal(config.getStatusCode().OK);
       });
     });
 
@@ -84,16 +82,21 @@ describe('Github Api Test', () => {
       };
 
       before(async () => {
-        const response = await agent
-          .get(`${urlBase}/repos/${githubUserName}/${repositoryName}/contents`)
+        const response = await config
+          .getAgent()
+          .get(
+            `${config.getBaseURL()}/repos/${githubUserName}/${repositoryName}/contents`
+          )
           .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
 
         contents = response.body;
       });
 
-      it('When we check the name, path and sha of the README.md file', () => {
-        const readmeFile = contents.find((file) => file.name === expectedSubset.name);
+      it('The the name, path and sha of the README.md file are the expected', () => {
+        const readmeFile = contents.find(
+          (file) => file.name === expectedSubset.name
+        );
         expect(readmeFile).to.containSubset(expectedSubset);
       });
     });
@@ -103,8 +106,11 @@ describe('Github Api Test', () => {
       const expectedMd5 = '3449c9e5e332f1dbb81505cd739fbf3f';
 
       before(async () => {
-        const response = await agent
-          .get('https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md')
+        const response = await config
+          .getAgent()
+          .get(
+            'https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md'
+          )
           .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
 
@@ -116,4 +122,4 @@ describe('Github Api Test', () => {
       });
     });
   });
-}); */
+});

@@ -1,14 +1,9 @@
-const { StatusCodes } = require('http-status-codes');
-const agent = require('superagent');
-
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
-
 chai.use(chaiSubset);
 const { expect } = chai;
-
-const baseURL = 'https://api.github.com';
 const githubUserName = 'aperdomob';
+const config = require('./GithubApi.Config');
 
 describe('Scenario: Consume DELETE Service', () => {
   let id;
@@ -29,20 +24,21 @@ describe('Scenario: Consume DELETE Service', () => {
       };
     });
 
-    describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`, () => {
-      before(async () => {
-        gist = await agent
-          .post(`${baseURL}/gists`, newGist)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN);
-        id = gist.body.id;
-      });
+    describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`,
+      () => {
+        before(async () => {
+          gist = await config.getAgent()
+            .post(`${config.getBaseURL()}/gists`, newGist)
+            .set('User-Agent', 'agent')
+            .auth('token', process.env.ACCESS_TOKEN);
+          id = gist.body.id;
+        });
 
-      it('Then the gist is created successfuly', () => {
-        expect(gist.status).to.equal(StatusCodes.CREATED);
-        expect(gist.body).to.containSubset(newGist);
+        it('Then the gist is created successfuly', () => {
+          expect(gist.status).to.equal(config.getStatusCode().CREATED);
+          expect(gist.body).to.containSubset(newGist);
+        });
       });
-    });
   });
 
   describe('Given the id of a gist', () => {
@@ -50,8 +46,8 @@ describe('Scenario: Consume DELETE Service', () => {
       let gist;
 
       before(async () => {
-        const response = await agent
-          .get(`${baseURL}/gists/${id}`)
+        const response = await config.getAgent()
+          .get(`${config.getBaseURL()}/gists/${id}`)
           .set('User-Agent', 'agent');
         gist = response.body;
       });
@@ -66,14 +62,14 @@ describe('Scenario: Consume DELETE Service', () => {
     describe('When the gist is eliminated', () => {
       let response;
       before(async () => {
-        response = await agent
-          .delete(`${baseURL}/gists/${id}`)
+        response = await config.getAgent()
+          .delete(`${config.getBaseURL()}/gists/${id}`)
           .set('User-Agent', 'agent')
           .auth('token', process.env.ACCESS_TOKEN);
       });
 
-      it('Then the gist doesn\'t exist', () => {
-        expect(response.status).to.equal(StatusCodes.NO_CONTENT);
+      it("Then the gist doesn't exist", () => {
+        expect(response.status).to.equal(config.getStatusCode().NO_CONTENT);
       });
     });
   });
