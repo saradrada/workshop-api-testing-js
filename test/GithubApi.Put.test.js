@@ -1,4 +1,4 @@
-const agent = require('superagent');
+/* const agent = require('superagent');
 const statusCode = require('http-status-codes');
 const chai = require('chai');
 
@@ -75,4 +75,4 @@ describe('Scenario: Consume PUT Service', () => {
       expect(listDuplicated.length).to.equal(1);
     });
   });
-});
+}); */

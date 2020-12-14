@@ -1,4 +1,4 @@
-const agent = require('superagent');
+/* const agent = require('superagent');
 const chai = require('chai');
 
 const { expect } = chai;
@@ -7,35 +7,41 @@ const urlBase = 'https://api.github.com';
 const githubUserName = 'saradrada';
 
 describe('Scenario: Consume POST and PATCH services', () => {
-  describe("Given we have the user's information", () => {
+  describe(`Given ${githubUserName}'s github account`, () => {
     let user;
-    before(async () => {
-      const response = await agent
-        .get(`${urlBase}/user`)
-        .set('User-Agent', 'agent')
-        .auth('token', process.env.ACCESS_TOKEN);
-      user = response.body;
+
+    describe(`When sends a GET request to retrieves ${githubUserName}'s information`, () => {
+      before(async () => {
+        const response = await agent
+          .get(`${urlBase}/user`)
+          .set('User-Agent', 'agent')
+          .auth('token', process.env.ACCESS_TOKEN);
+        user = response.body;
+      });
+
+      it('Then we check the user has at least 1 public repository', () => {
+        expect(user.public_repos).to.be.above(0);
+      });
     });
 
-    it('When we check the user has at least 1 public repository', () => {
-      expect(user.public_repos).to.be.above(0);
-    });
   });
 
-  let repositoryName;
-  describe(`Given we have ${githubUserName}'s list of repositories`, () => {
+  let repository;
+  describe(`Given ${githubUserName}'s github account`, () => {
     let list;
-    before(async () => {
-      const response = await agent
-        .get(`${urlBase}/users/${githubUserName}/repos`)
-        .set('User-Agent', 'agent');
-      list = response.body;
-    });
+    describe(`When sends a GET request to get ${githubUserName}'s repository list`, () => {
+      before(async () => {
+        const response = await agent
+          .get(`${urlBase}/users/${githubUserName}/repos`)
+          .set('User-Agent', 'agent');
+        list = response.body;
+      });
 
-    it('When we check that at least one reposotory exists', () => {
-      const repo = list[0];
-      repositoryName = repo.name;
-      expect(repo).to.exist;
+      it('Then at least one repository of the list exists', () => {
+        repository = list[0];
+        expect(repo).to.exist;
+        expect(list.size).to.have.lengthOf.at.least(1);
+      });
     });
   });
 
@@ -43,7 +49,7 @@ describe('Scenario: Consume POST and PATCH services', () => {
     let issue;
     before(async () => {
       const response = await agent
-        .post(`${urlBase}/repos/${githubUserName}/${repositoryName}/issues`)
+        .post(`${urlBase}/repos/${githubUserName}/${repository.name}/issues`)
         .auth('token', process.env.ACCESS_TOKEN)
         .set('User-Agent', 'agent')
         .send({ title: 'Title 2 new issue' });
@@ -75,4 +81,4 @@ describe('Scenario: Consume POST and PATCH services', () => {
       expect(modifiedIssue.body.body).to.equal(`Modified body of the issue number ${issueNumber}`);
     });
   });
-});
+}); */

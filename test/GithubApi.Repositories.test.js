@@ -1,4 +1,4 @@
-const agent = require('superagent');
+/*  agent = require('superagent');
 const statusCode = require('http-status-codes');
 const md5 = require('md5');
 const chai = require('chai');
@@ -39,6 +39,7 @@ describe('Github Api Test', () => {
       before(async () => {
         const response = await agent
           .get(`${urlBase}/users/${githubUserName}/repos`)
+          .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
 
         repositories = response.body;
@@ -85,7 +86,9 @@ describe('Github Api Test', () => {
       before(async () => {
         const response = await agent
           .get(`${urlBase}/repos/${githubUserName}/${repositoryName}/contents`)
+          .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
+
         contents = response.body;
       });
 
@@ -102,6 +105,7 @@ describe('Github Api Test', () => {
       before(async () => {
         const response = await agent
           .get('https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md')
+          .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
           .set('User-Agent', 'agent');
 
         readmeFile = response;
@@ -112,4 +116,4 @@ describe('Github Api Test', () => {
       });
     });
   });
-});
+}); */

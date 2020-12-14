@@ -1,53 +1,79 @@
-const { expect } = require('chai');
 const { StatusCodes } = require('http-status-codes');
 const agent = require('superagent');
+
+const chai = require('chai');
+const chaiSubset = require('chai-subset');
+
+chai.use(chaiSubset);
+const { expect } = chai;
 
 const baseURL = 'https://api.github.com';
 const githubUserName = 'aperdomob';
 
 describe('Scenario: Consume DELETE Service', () => {
-  describe(`Given we can create a gist on ${githubUserName}'s github account`, () => {
+  let id;
+  describe('Given a gist object', () => {
     let gist;
-    const newGist = {
-      description: 'Gist description',
-      public: true,
-      files: {
-        'example.tsx': {
-          filename: 'example.tsx',
-          type: 'text/plain',
-          content: 'Example content'
-        }
-      }
-    };
+    let newGist;
     before(async () => {
-      const response = await agent
-        .post(`${baseURL}/gists`, newGist)
-        .set('User-Agent', 'agent')
-        .auth('token', process.env.ACCESS_TOKEN);
-
-      gist = response;
+      newGist = {
+        description: 'Gist description',
+        public: true,
+        files: {
+          'example.tsx': {
+            filename: 'example.tsx',
+            type: 'text/plain',
+            content: 'Example content'
+          }
+        }
+      };
     });
 
-    it('When we check we created the gist', () => {
-      expect(gist.status).to.equal(StatusCodes.CREATED);
-      expect(gist.body).to.containSubset(newGist);
+    describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`, () => {
+      before(async () => {
+        gist = await agent
+          .post(`${baseURL}/gists`, newGist)
+          .set('User-Agent', 'agent')
+          .auth('token', process.env.ACCESS_TOKEN);
+        id = gist.body.id;
+      });
+
+      it('Then the gist is created successfuly', () => {
+        expect(gist.status).to.equal(StatusCodes.CREATED);
+        expect(gist.body).to.containSubset(newGist);
+      });
     });
   });
 
-  describe('Given a gist', () => {
+  describe('Given the id of a gist', () => {
     describe('When the gist is retrieved', () => {
       let gist;
-      const gistId = 'ba6c6d4219ef9ad2d49d8031224be5e7';
+
       before(async () => {
         const response = await agent
-          .get(`${baseURL}/gists/${gistId}`)
+          .get(`${baseURL}/gists/${id}`)
           .set('User-Agent', 'agent');
-
-        gist = response;
+        gist = response.body;
       });
 
-      it('Then the gist is created correctly', () => {
+      it('Then the gist exists', () => {
         expect(gist).to.exist;
+        expect(gist.id).to.equal(id);
+        expect(gist.public).to.equal(true);
+      });
+    });
+
+    describe('When the gist is eliminated', () => {
+      let response;
+      before(async () => {
+        response = await agent
+          .delete(`${baseURL}/gists/${id}`)
+          .set('User-Agent', 'agent')
+          .auth('token', process.env.ACCESS_TOKEN);
+      });
+
+      it('Then the gist doesn\'t exist', () => {
+        expect(response.status).to.equal(StatusCodes.NO_CONTENT);
       });
     });
   });

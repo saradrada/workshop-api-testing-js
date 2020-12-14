@@ -1,4 +1,4 @@
-const agent = require('superagent');
+/* const agent = require('superagent');
 const statusCode = require('http-status-codes');
 const chai = require('chai');
 
@@ -93,4 +93,4 @@ it('Consume DELETE Service with query parameters', async () => {
   expect(response.status).to.equal(statusCode.OK);
   expect(response.body).to.have.property('args');
   expect(response.body).to.have.property('files');
-});
+}); */
