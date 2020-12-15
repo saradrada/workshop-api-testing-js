@@ -1,13 +1,15 @@
-const md5 = require('md5');
 const chai = require('chai');
 const chaiSubset = require('chai-subset');
 
 chai.use(chaiSubset);
 const { expect } = chai;
-const config = require('./GithubApi.Config');
+const statusCode = require('http-status-codes');
+const agent = require('superagent');
+const md5 = require('md5');
 
 const githubUserName = 'aperdomob';
 const repositoryName = 'jasmine-awesome-report';
+const request = require('./Request');
 
 describe('Github Api Test', () => {
   describe('Scenario: Consume GET Service', () => {
@@ -16,12 +18,7 @@ describe('Github Api Test', () => {
 
       describe(`When a GET request is sent to retrieve ${githubUserName}'s information`, () => {
         before(async () => {
-          const response = await config
-            .getAgent()
-            .get(`${config.getBaseURL()}/users/${githubUserName}`)
-            .set('User-Agent', 'agent')
-            .auth('token', process.env.ACCESS_TOKEN);
-
+          const response = await request.get(`users/${githubUserName}`);
           user = response.body;
         });
 
@@ -36,14 +33,8 @@ describe('Github Api Test', () => {
       describe(`When a GET request is sent to get ${githubUserName}'s repositories`, () => {
         let repositories;
         before(async () => {
-          const response = await config
-            .getAgent()
-            .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
-            .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
-            .set('User-Agent', 'agent');
-
+          const response = await request.get(`users/${githubUserName}/repos`);
           repositories = response.body;
-
           foundedRepository = repositories.find(
             (repository) => repository.name === 'jasmine-awesome-report'
           );
@@ -64,25 +55,19 @@ describe('Github Api Test', () => {
         let repoAsZip;
 
         before(async () => {
-          const response = await config
-            .getAgent()
-            .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
-            .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
-            .set('User-Agent', 'agent');
-
+          const response = await request.get(`users/${githubUserName}/repos`);
           const repositories = response.body;
 
           foundedRepository = repositories.find(
             (repository) => repository.name === 'jasmine-awesome-report'
           );
 
-          repoAsZip = await config
-            .getAgent()
+          repoAsZip = await agent
             .get(`${foundedRepository.svn_url}/archive/master.zip`);
         });
 
         it('Then file is donwloaded properly', () => {
-          expect(repoAsZip.status).to.equal(config.getStatusCode().OK);
+          expect(repoAsZip.status).to.equal(statusCode.OK);
           expect(repoAsZip.headers['content-type']).to.equal('application/zip');
           expect(repoAsZip.ok).to.be.true;
         });
@@ -98,18 +83,11 @@ describe('Github Api Test', () => {
       };
 
       before(async () => {
-        const response = await config
-          .getAgent()
-          .get(
-            `${config.getBaseURL()}/repos/${githubUserName}/${repositoryName}/contents`
-          )
-          .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
-          .set('User-Agent', 'agent');
-
+        const response = await request.get(`repos/${githubUserName}/${repositoryName}/contents`);
         contents = response.body;
       });
 
-      it('The the name, path and sha of the README.md file are the expected', () => {
+      it('Then the name, path and sha of the README.md file are the expected', () => {
         const readmeFile = contents.find(
           (file) => file.name === expectedSubset.name
         );
@@ -123,8 +101,7 @@ describe('Github Api Test', () => {
 
       describe('When a GET request is sent to retrieve the README.md file', () => {
         before(async () => {
-          const response = await config
-            .getAgent()
+          const response = await agent
             .get(
               'https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md'
             )
@@ -137,7 +114,7 @@ describe('Github Api Test', () => {
           expect(md5(readmeFile)).to.equal(expectedMd5);
           expect(md5(readmeFile).length).to.be.above(0);
           expect(readmeFile.header['content-type']).to.equal('text/plain; charset=utf-8');
-          expect(readmeFile.status).to.equal(config.getStatusCode().OK);
+          expect(readmeFile.status).to.equal(statusCode.OK);
         });
       });
     });

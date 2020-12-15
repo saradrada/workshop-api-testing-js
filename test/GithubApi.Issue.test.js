@@ -1,8 +1,9 @@
 const chai = require('chai');
 
 const { expect } = chai;
+
 const githubUserName = 'saradrada';
-const config = require('./GithubApi.Config');
+const request = require('./Request');
 
 describe('Scenario: Consume POST and PATCH services', () => {
   describe(`Given ${githubUserName}'s github account`, () => {
@@ -10,11 +11,7 @@ describe('Scenario: Consume POST and PATCH services', () => {
 
     describe(`When a GET request is sent to retrieves ${githubUserName}'s information`, () => {
       before(async () => {
-        const response = await config
-          .getAgent()
-          .get(`${config.getBaseURL()}/user`)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN);
+        const response = await request.get('user');
         user = response.body;
       });
 
@@ -29,10 +26,7 @@ describe('Scenario: Consume POST and PATCH services', () => {
     let list;
     describe(`When a GET request is sent to get ${githubUserName}'s repository list`, () => {
       before(async () => {
-        const response = await config
-          .getAgent()
-          .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
-          .set('User-Agent', 'agent');
+        const response = await request.get(`users/${githubUserName}/repos`);
         list = response.body;
       });
 
@@ -46,18 +40,20 @@ describe('Scenario: Consume POST and PATCH services', () => {
 
   describe(`Given ${githubUserName}'s github account`, () => {
     let issue;
+    const modifications = { title: 'Title 3 new issue' };
+
+    before(async () => {
+      const response = await request.get(`users/${githubUserName}/repos`);
+      const list = response.body;
+      repository = list[0];
+    });
+
     describe('When a POST request is sent to create an issue', () => {
       before(async () => {
-        issue = await config
-          .getAgent()
-          .post(
-            `${config.getBaseURL()}/repos/${githubUserName}/${
-              repository.name
-            }/issues`
-          )
-          .auth('token', process.env.ACCESS_TOKEN)
-          .set('User-Agent', 'agent')
-          .send({ title: 'Title 3 new issue' });
+        issue = await request.post(
+          `repos/${githubUserName}/${repository.name}/issues`,
+          modifications
+        );
       });
 
       it('Then the issue is created successfully', () => {
@@ -70,41 +66,27 @@ describe('Scenario: Consume POST and PATCH services', () => {
   describe('Given an issue', () => {
     let modifiedIssue;
     let issueNumber;
+    let modifications;
 
     describe('When a PATCH request is sent to modify the issue', () => {
       before(async () => {
-        const req = await config
-          .getAgent()
-          .get(`${config.getBaseURL()}/users/${githubUserName}/repos`)
-          .set('User-Agent', 'agent');
-
+        const req = await request.get(`users/${githubUserName}/repos`);
         repository = req.body[0];
 
-        const issue = await config
-          .getAgent()
-          .post(
-            `${config.getBaseURL()}/repos/${githubUserName}/${
-              repository.name
-            }/issues`
-          )
-          .auth('token', process.env.ACCESS_TOKEN)
-          .set('User-Agent', 'agent')
-          .send({ title: 'Issue to be modify' });
-
+        modifications = { title: 'Issue to be modify' };
+        const issue = await request.post(
+          `repos/${githubUserName}/${repository.name}/issues`,
+          modifications
+        );
         issueNumber = issue.body.number;
 
-        const response = await config
-          .getAgent()
-          .patch(
-            `${config.getBaseURL()}/repos/${githubUserName}/${
-              repository.name
-            }/issues/${issueNumber}`
-          )
-          .auth('token', process.env.ACCESS_TOKEN)
-          .set('User-Agent', 'agent')
-          .send({ body: `Modified body of the issue number ${issueNumber}` });
-
-        modifiedIssue = response;
+        modifications = {
+          body: `Modified body of the issue number ${issueNumber}`
+        };
+        modifiedIssue = await request.patch(
+          `repos/${githubUserName}/${repository.name}/issues/${issueNumber}`,
+          modifications
+        );
       });
 
       it('Then the issue is modified', () => {

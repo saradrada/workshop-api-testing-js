@@ -1,7 +1,11 @@
-/* const chai = require('chai');
+const chai = require('chai');
+
 const { expect } = chai;
+const statusCode = require('http-status-codes');
+
+const urlBase = 'https://api.github.com';
 const githubUserName = 'aperdomob';
-const config = require('./GithubApi.Config');
+const request = require('./Request');
 
 describe('Scenario: Consume PUT Service', () => {
   describe(`Given ${githubUserName}'s github account`, () => {
@@ -9,15 +13,11 @@ describe('Scenario: Consume PUT Service', () => {
 
     describe('When a PUT request is sent to follow the account', () => {
       before(async () => {
-        response = await config
-          .getAgent()
-          .put(`${config.getBaseURL()}/user/following/${githubUserName}`)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN); // For rate limiting
+        response = await request.put(`user/following/${githubUserName}`);
       });
 
       it(`Then ${githubUserName}'s github account is followed`, () => {
-        expect(response.status).to.equal(config.getStatusCode().NO_CONTENT);
+        expect(response.status).to.equal(statusCode.NO_CONTENT);
         expect(response.body).to.be.empty;
       });
     });
@@ -28,12 +28,7 @@ describe('Scenario: Consume PUT Service', () => {
 
     describe('When a GET request is sent to get all followers', () => {
       before(async () => {
-        const response = await config
-          .getAgent()
-          .get(`${config.getBaseURL()}/user/following`)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN);
-
+        const response = await request.get('user/following');
         list = response.body;
       });
 
@@ -41,9 +36,7 @@ describe('Scenario: Consume PUT Service', () => {
         const user = list.find((u) => u.login === githubUserName);
         expect(user).to.exist;
         expect(user.login).to.equal(githubUserName);
-        expect(user.url).to.equal(
-          `${config.getBaseURL()}/users/${githubUserName}`
-        );
+        expect(user.url).to.equal(`${urlBase}/users/${githubUserName}`);
       });
     });
   });
@@ -52,37 +45,25 @@ describe('Scenario: Consume PUT Service', () => {
     let response;
     let list;
 
-    describe('When a PUT request is sent to follow the accoung', () => {
+    describe('When a PUT request is sent to follow the account', () => {
       before(async () => {
-        response = await config
-          .getAgent()
-          .put(`${config.getBaseURL()}/user/following/${githubUserName}`)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN);
-
-        const responseList = await config
-          .getAgent()
-          .get(`${config.getBaseURL()}/user/following`)
-          .set('User-Agent', 'agent')
-          .auth('token', process.env.ACCESS_TOKEN);
-
+        response = await request.put(`user/following/${githubUserName}`);
+        const responseList = await request.get('user/following');
         list = responseList.body;
       });
 
       it('Then the idempotency of the method is correct', () => {
-        expect(response.status).to.equal(config.getStatusCode().NO_CONTENT);
+        expect(response.status).to.equal(statusCode.NO_CONTENT);
         expect(response.body).to.be.empty;
 
         const user = list.find((u) => u.login === githubUserName);
         expect(user).to.exist;
         expect(user.login).to.equal(githubUserName);
-        expect(user.url).to.equal(
-          `${config.getBaseURL()}/users/${githubUserName}`
-        );
+        expect(user.url).to.equal(`${urlBase}/users/${githubUserName}`);
 
         const listDuplicated = list.filter((u) => u.login === githubUserName);
         expect(listDuplicated.length).to.equal(1);
       });
     });
   });
-}); */
+});

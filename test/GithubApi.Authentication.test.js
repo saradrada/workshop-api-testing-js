@@ -1,33 +1,32 @@
-/* const { expect } = require('chai');
-const config = require('./GithubApi.Config');
+const { expect } = require('chai');
+const agent = require('superagent');
+const statusCode = require('http-status-codes');
+
+const urlBase = 'https://api.github.com';
 const githubUserName = 'saradrada';
 const repository = 'workshop-api-testing-js';
+const request = require('./Request');
 
 describe('Github Api Test', () => {
   describe('Authentication', () => {
     it('Via OAuth2 Tokens by Header', async () => {
-      const response = await config
-        .getAgent()
-        .get(`${config.getBaseURL()}/repos/${githubUserName}/${repository}`)
-        .auth('token', process.env.ACCESS_TOKEN)
-        .set('User-Agent', 'agent');
+      const response = await request.get(`repos/${githubUserName}/${repository}`);
 
-      expect(response.status).to.equal(config.getStatusCode().OK);
+      expect(response.status).to.equal(statusCode.OK);
       expect(response.body.description).equal(
         "PSL's workshop about Api Testing in JavaScript"
       );
     });
 
-    it('Via OAuth2 Tokens by parameter', () => config
-      .getAgent()
-      .get(`${config.getBaseURL()}/repos/${githubUserName}/${repository}`)
+    it('Via OAuth2 Tokens by parameter', () => agent
+      .get(`${urlBase}/repos/${githubUserName}/${repository}`)
       .query(`access_token=${process.env.ACCESS_TOKEN}`)
       .set('User-Agent', 'agent')
       .then((response) => {
-        expect(response.status).to.equal(config.getStatusCode().OK);
+        expect(response.status).to.equal(statusCode.OK);
         expect(response.body.description).equal(
           "PSL's workshop about Api Testing in JavaScript"
         );
       }));
   });
-}); */
+});
