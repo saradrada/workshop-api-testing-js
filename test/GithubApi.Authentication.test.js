@@ -1,19 +1,18 @@
+const { expect } = require('chai');
 const agent = require('superagent');
 const statusCode = require('http-status-codes');
-const { expect } = require('chai');
 
 const urlBase = 'https://api.github.com';
 const githubUserName = 'saradrada';
 const repository = 'workshop-api-testing-js';
+const request = require('./Request').instance;
 
 describe('Github Api Test', () => {
   describe('Authentication', () => {
     it('Via OAuth2 Tokens by Header', async () => {
-      console.log('Token', process.env.ACCESS_TOKEN);
-      const response = await agent
-        .get(`${urlBase}/repos/${githubUserName}/${repository}`)
-        .auth('token', process.env.ACCESS_TOKEN)
-        .set('User-Agent', 'agent');
+      const response = await request.get(
+        `repos/${githubUserName}/${repository}`
+      );
 
       expect(response.status).to.equal(statusCode.OK);
       expect(response.body.description).equal(

@@ -24,6 +24,7 @@
   "homepage": "https://github.com/saradrada/workshop-api-testing-js#readme",
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-subset": "^1.6.0",
     "eslint": "^7.10.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.1",
@@ -32,6 +33,7 @@
     "mochawesome": "^6.1.1"
   },
   "dependencies": {
+    "md5": "^2.3.0",
     "superagent": "^6.1.0",
     "superagent-promise": "^1.1.0",
     "travis-cli": "^1.0.9"
