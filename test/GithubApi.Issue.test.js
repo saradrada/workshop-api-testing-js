@@ -3,7 +3,7 @@ const chai = require('chai');
 const { expect } = chai;
 
 const githubUserName = 'saradrada';
-const request = require('./Request');
+const request = require('./Request').instance;
 
 describe('Scenario: Consume POST and PATCH services', () => {
   describe(`Given ${githubUserName}'s github account`, () => {

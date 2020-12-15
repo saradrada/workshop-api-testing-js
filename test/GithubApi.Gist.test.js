@@ -4,7 +4,7 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 const { expect } = chai;
 const statusCode = require('http-status-codes');
-const request = require('./Request');
+const request = require('./Request').instance;
 
 const githubUserName = 'aperdomob';
 

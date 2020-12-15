@@ -5,12 +5,14 @@ const statusCode = require('http-status-codes');
 const urlBase = 'https://api.github.com';
 const githubUserName = 'saradrada';
 const repository = 'workshop-api-testing-js';
-const request = require('./Request');
+const request = require('./Request').instance;
 
 describe('Github Api Test', () => {
   describe('Authentication', () => {
     it('Via OAuth2 Tokens by Header', async () => {
-      const response = await request.get(`repos/${githubUserName}/${repository}`);
+      const response = await request.get(
+        `repos/${githubUserName}/${repository}`
+      );
 
       expect(response.status).to.equal(statusCode.OK);
       expect(response.body.description).equal(

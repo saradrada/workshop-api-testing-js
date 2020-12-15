@@ -1,44 +1,52 @@
 const agent = require('superagent');
 
-const urlBase = 'https://api.github.com';
+class Request {
+  constructor() {
+    this.urlBase = 'https://api.github.com';
+  }
 
-function getRequest(path) {
-  return agent
-    .get(`${urlBase}/${path}`)
-    .set('User-Agent', 'agent')
-    .auth('token', process.env.ACCESS_TOKEN);
+  setUrlBase(path) {
+    this.urlBase = path;
+  }
+
+  get(path, useBaseUrl = true) {
+    return agent
+      .get(useBaseUrl ? `${this.urlBase}/${path}` : path)
+      .set('User-Agent', 'agent')
+      .auth('token', process.env.ACCESS_TOKEN);
+  }
+
+  delete(path, useBaseUrl = true) {
+    return agent
+      .delete(useBaseUrl ? `${this.urlBase}/${path}` : path)
+      .set('User-Agent', 'agent')
+      .auth('token', process.env.ACCESS_TOKEN);
+  }
+
+  post(path, input, useBaseUrl = true) {
+    return agent
+      .post(useBaseUrl ? `${this.urlBase}/${path}` : path, input)
+      .set('User-Agent', 'agent')
+      .auth('token', process.env.ACCESS_TOKEN);
+  }
+
+  patch(path, input, useBaseUrl = true) {
+    return agent
+      .patch(useBaseUrl ? `${this.urlBase}/${path}` : path, input)
+      .auth('token', process.env.ACCESS_TOKEN)
+      .set('User-Agent', 'agent');
+  }
+
+  put(path, useBaseUrl = true) {
+    return agent
+      .put(useBaseUrl ? `${this.urlBase}/${path}` : path)
+      .set('User-Agent', 'agent')
+      .auth('token', process.env.ACCESS_TOKEN);
+  }
+
+  head(path, useBaseUrl = true) {
+    return agent.head(useBaseUrl ? `${this.urlBase}/${path}` : path);
+  }
 }
 
-function deleteRequest(path) {
-  return agent
-    .delete(`${urlBase}/${path}`)
-    .set('User-Agent', 'agent')
-    .auth('token', process.env.ACCESS_TOKEN);
-}
-
-function postRequest(path, input) {
-  return agent
-    .post(`${urlBase}/${path}`, input)
-    .set('User-Agent', 'agent')
-    .auth('token', process.env.ACCESS_TOKEN);
-}
-
-function patchRequest(path, input) {
-  return agent
-    .patch(`${urlBase}/${path}`, input)
-    .auth('token', process.env.ACCESS_TOKEN)
-    .set('User-Agent', 'agent');
-}
-
-function putRequest(path) {
-  return agent
-    .put(`${urlBase}/${path}`)
-    .set('User-Agent', 'agent')
-    .auth('token', process.env.ACCESS_TOKEN);
-}
-
-module.exports.get = getRequest;
-module.exports.delete = deleteRequest;
-module.exports.post = postRequest;
-module.exports.patch = patchRequest;
-module.exports.put = putRequest;
+module.exports.instance = new Request();

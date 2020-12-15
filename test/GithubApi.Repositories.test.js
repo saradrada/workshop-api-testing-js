@@ -4,12 +4,11 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 const { expect } = chai;
 const statusCode = require('http-status-codes');
-const agent = require('superagent');
 const md5 = require('md5');
 
 const githubUserName = 'aperdomob';
 const repositoryName = 'jasmine-awesome-report';
-const request = require('./Request');
+const request = require('./Request').instance;
 
 describe('Github Api Test', () => {
   describe('Scenario: Consume GET Service', () => {
@@ -62,8 +61,10 @@ describe('Github Api Test', () => {
             (repository) => repository.name === 'jasmine-awesome-report'
           );
 
-          repoAsZip = await agent
-            .get(`${foundedRepository.svn_url}/archive/master.zip`);
+          repoAsZip = await request.get(
+            `${foundedRepository.svn_url}/archive/master.zip`,
+            false
+          );
         });
 
         it('Then file is donwloaded properly', () => {
@@ -83,7 +84,9 @@ describe('Github Api Test', () => {
       };
 
       before(async () => {
-        const response = await request.get(`repos/${githubUserName}/${repositoryName}/contents`);
+        const response = await request.get(
+          `repos/${githubUserName}/${repositoryName}/contents`
+        );
         contents = response.body;
       });
 
@@ -101,19 +104,16 @@ describe('Github Api Test', () => {
 
       describe('When a GET request is sent to retrieve the README.md file', () => {
         before(async () => {
-          const response = await agent
-            .get(
-              'https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md'
-            )
-            .auth('token', process.env.ACCESS_TOKEN) // For rate limiting
-            .set('User-Agent', 'agent');
-
+          const response = await request.get('https://raw.githubusercontent.com/aperdomob/jasmine-awesome-report/development/README.md', false);
           readmeFile = response;
         });
+
         it('Then the md5 of the README.file is the expected', () => {
           expect(md5(readmeFile)).to.equal(expectedMd5);
           expect(md5(readmeFile).length).to.be.above(0);
-          expect(readmeFile.header['content-type']).to.equal('text/plain; charset=utf-8');
+          expect(readmeFile.header['content-type']).to.equal(
+            'text/plain; charset=utf-8'
+          );
           expect(readmeFile.status).to.equal(statusCode.OK);
         });
       });

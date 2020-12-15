@@ -5,7 +5,7 @@ const statusCode = require('http-status-codes');
 
 const urlBase = 'https://api.github.com';
 const githubUserName = 'aperdomob';
-const request = require('./Request');
+const request = require('./Request').instance;
 
 describe('Scenario: Consume PUT Service', () => {
   describe(`Given ${githubUserName}'s github account`, () => {
