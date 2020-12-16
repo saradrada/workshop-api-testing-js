@@ -15,7 +15,22 @@ const listPublicEventsSchema = {
           created_at: { type: 'string' },
           type: {
             type: 'string',
-            enum: ['PushEvent', 'PullRequestEvent', 'MemberEvent', 'CreateEvent', 'DeleteEvent', 'PullRequestReviewCommentEvent', 'IssueCommentEvent', 'WatchEvent', 'IssuesEvent', 'ForkEvent', 'GollumEvent', 'PublicEvent']
+            enum: [
+              'PushEvent',
+              'PullRequestReviewEvent',
+              'PullRequestEvent',
+              'MemberEvent',
+              'CreateEvent',
+              'DeleteEvent',
+              'PullRequestReviewCommentEvent',
+              'IssueCommentEvent',
+              'WatchEvent',
+              'IssuesEvent',
+              'ForkEvent',
+              'GollumEvent',
+              'PublicEvent',
+              'CommitCommentEvent'
+            ]
           },
           actor: {
             type: 'object',
