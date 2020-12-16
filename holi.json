@@ -1,0 +1,57 @@
+
+> workshop-api-testing@1.0.0 test C:\Users\sarad\Documents\PSL\workshop-api-testing-js
+> npm run lint && mocha -t 5000 --reporter mochawesome --reporter-options reportDir=report,reportFilename=ApiTesting
+
+
+> workshop-api-testing@1.0.0 lint C:\Users\sarad\Documents\PSL\workshop-api-testing-js
+> eslint ./test/**/*.js
+
+
+C:\Users\sarad\Documents\PSL\workshop-api-testing-js\test\GithubApi.Gist.Fetch.test.js
+  40:9  warning  Unexpected console statement  no-console
+
+C:\Users\sarad\Documents\PSL\workshop-api-testing-js\test\GithubApi.Issue.test.js
+  30:9  warning  Unexpected console statement  no-console
+
+✖ 2 problems (0 errors, 2 warnings)
+
+
+
+  Scenario: Consume DELETE Service
+    Given a gist object
+      When a POST request is sent to create a gist on aperdomob's github account
+Response {
+  size: 0,
+  timeout: 0,
+  [Symbol(Body internals)]: {
+    body: PassThrough {
+      _readableState: [ReadableState],
+      readable: true,
+      _events: [Object: null prototype],
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      _writableState: [WritableState],
+      writable: false,
+      allowHalfOpen: true,
+      _transformState: [Object]
+    },
+    disturbed: false,
+    error: null
+  },
+  [Symbol(Response internals)]: {
+    url: 'https://api.github.com/gists',
+    status: 201,
+    statusText: 'Created',
+    headers: Headers { [Symbol(map)]: [Object: null prototype] },
+    counter: 0
+  }
+}
+        √ Then the gist is created successfuly
+
+
+  1 passing (2s)
+
+[mochawesome] Report JSON saved to C:\Users\sarad\Documents\PSL\workshop-api-testing-js\report\ApiTesting.json
+
+[mochawesome] Report HTML saved to C:\Users\sarad\Documents\PSL\workshop-api-testing-js\report\ApiTesting.html
+

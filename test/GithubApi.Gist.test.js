@@ -11,27 +11,24 @@ const githubUserName = 'aperdomob';
 describe('Scenario: Consume DELETE Service', () => {
   describe('Given a gist object', () => {
     let gist;
-    let newGist;
-    before(async () => {
-      newGist = {
-        description: 'Gist description',
-        public: true,
-        files: {
-          'example.tsx': {
-            filename: 'example.tsx',
-            type: 'text/plain',
-            content: 'Example content'
-          }
+    const newGist = {
+      description: 'Gist description',
+      public: true,
+      files: {
+        'example.tsx': {
+          filename: 'example.tsx',
+          type: 'text/plain',
+          content: 'Example content'
         }
-      };
-    });
+      }
+    };
 
     describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`, () => {
       before(async () => {
         gist = await request.post('gists', newGist);
       });
 
-      it('Then the gist is created successfuly', () => {
+      it.only('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
         expect(gist.body).to.containSubset(newGist);
       });
@@ -64,7 +61,7 @@ describe('Scenario: Consume DELETE Service', () => {
         gist = response.body;
       });
 
-      it('Then the gist exists', () => {
+      it.only('Then the gist exists', () => {
         expect(gist).to.exist;
         expect(gist.id).to.equal(id);
         expect(gist.public).to.equal(true);
@@ -78,7 +75,7 @@ describe('Scenario: Consume DELETE Service', () => {
         response = await request.delete(`gists/${id}`);
       });
 
-      it("Then the gist doesn't exist", () => {
+      it.only("Then the gist doesn't exist", () => {
         expect(response.status).to.equal(statusCode.NO_CONTENT);
       });
     });
