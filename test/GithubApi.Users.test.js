@@ -19,13 +19,12 @@ describe('Scenario: Consume HEAD Service', () => {
         listSize = Object.keys(userList.body).length;
       });
 
-      it.only('Then the response time is less than 5 seconds', () => {
+      it('Then the response time is less than 5 seconds', () => {
         expect(resTime).to.be.below(5000);
       });
 
-      it.only("And the user's list size is 30 (default size)", () => {
+      it("And the user's list size is 30 (default size)", () => {
         expect(listSize).to.equal(30);
-        expect(listSize).to.be.above(0);
       });
     });
 
@@ -35,7 +34,7 @@ describe('Scenario: Consume HEAD Service', () => {
         listSize = Object.keys(userList.body).length;
       });
 
-      it.only("Then the user's list size is exactly 10", () => {
+      it("Then the user's list size is exactly 10", () => {
         expect(listSize).to.equal(10);
       });
     });
@@ -46,7 +45,7 @@ describe('Scenario: Consume HEAD Service', () => {
         listSize = Object.keys(userList.body).length;
       });
 
-      it.only("Then the user's list size is exactly 50", () => {
+      it("Then the user's list size is exactly 50", () => {
         expect(listSize).to.equal(50);
       });
     });
