@@ -45,6 +45,7 @@ class Request {
   }
 
   head(path, useBaseUrl = true) {
+    console.log('🚀 ~ file: Request.js ~ line 49 ~ Request ~ head ~ path', path);
     return agent.head(useBaseUrl ? `${this.urlBase}/${path}` : path);
   }
 }
