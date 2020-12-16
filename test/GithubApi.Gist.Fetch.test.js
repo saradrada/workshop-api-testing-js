@@ -25,8 +25,7 @@ describe('Scenario: Consume DELETE Service', () => {
     const params = {
       method: 'POST',
       headers: {
-        Authorization: `${process.env.ACCESS_TOKEN}`,
-        'User-Agent': 'agent'
+        Authorization: `token ${process.env.ACCESS_TOKEN}`
       },
       body: JSON.stringify(newGist)
     };
