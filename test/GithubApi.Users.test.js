@@ -25,7 +25,6 @@ describe('Scenario: Consume HEAD Service', () => {
 
       it("And the user's list size is 30 (default size)", () => {
         expect(listSize).to.equal(30);
-        expect(listSize).to.be.above(0);
       });
     });
 
