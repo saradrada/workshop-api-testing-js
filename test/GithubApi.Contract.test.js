@@ -6,13 +6,13 @@ const { expect } = chai;
 chai.use(require('chai-json-schema'));
 
 describe('Given event Github API resources', () => {
-  describe('When wanna verify the List public events', () => {
+  describe('When a GET request is sent to get the list of public events', () => {
     let response;
 
     before(async () => {
       response = await request.get('events');
     });
 
-    it('then the body should have a schema', () => expect(response).to.be.jsonSchema(listPublicEventsSchema));
+    it('Then the body should have a schema', () => expect(response).to.be.jsonSchema(listPublicEventsSchema));
   });
 });
