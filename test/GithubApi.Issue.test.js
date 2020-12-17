@@ -27,7 +27,6 @@ describe('Scenario: Consume POST and PATCH services', () => {
     describe(`When a GET request is sent to get ${githubUserName}'s repository list`, () => {
       before(async () => {
         const response = await request.get(`users/${githubUserName}/repos`);
-        console.log('🚀 ~ file: GithubApi.Issue.test.js ~ line 30 ~ before ~ response', response);
         list = response.body;
       });
 

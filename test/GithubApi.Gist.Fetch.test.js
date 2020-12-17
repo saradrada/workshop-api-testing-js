@@ -21,7 +21,6 @@ describe('Scenario: Consume DELETE Service', () => {
         }
       }
     };
-
     const params = {
       method: 'POST',
       headers: {
@@ -31,21 +30,24 @@ describe('Scenario: Consume DELETE Service', () => {
     };
 
     describe(`When a POST request is sent to create a gist on ${githubUserName}'s github account`, () => {
+      let gistJson;
       before(async () => {
         gist = await isomorphicFetch(`${baseUrl}/gists`, params);
-      });
+        gistJson = await gist.json();
+      }, 20000);
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
-        console.log(gist);
-        // expect(gist.body).to.containSubset(newGist);
+        expect(gistJson).to.containSubset(newGist);
       });
     });
   });
 
   describe('Given a gist object', () => {
     let gist;
+    let gistJson;
     let id;
+
     const newGist = {
       description: 'Gist description',
       public: true,
@@ -58,7 +60,7 @@ describe('Scenario: Consume DELETE Service', () => {
       }
     };
 
-    let params = {
+    const paramsPost = {
       method: 'POST',
       headers: {
         Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
@@ -67,36 +69,38 @@ describe('Scenario: Consume DELETE Service', () => {
     };
 
     before(async () => {
-      gist = await isomorphicFetch(`${baseUrl}/gists`, params);
-      // id = gist.body.id;
-      id = 'b0e7847b0a54703c21067b33d2c1d621';
-    });
+      gist = await isomorphicFetch(`${baseUrl}/gists`, paramsPost);
+      gistJson = await gist.json();
+      id = gistJson.id;
+    }, 20000);
 
     describe('When the gist is retrieved', () => {
-      params = {
+      const paramsGet = {
         method: 'GET',
         headers: {
           Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
         }
       };
+
       before(async () => {
         const response = await isomorphicFetch(
           `${baseUrl}/gists/${id}`,
-          params
+          paramsGet
         );
-        gist = response.body;
-      });
+        gistJson = await response.json();
+      }, 20000);
 
       it('Then the gist exists', () => {
-        expect(gist).to.exist;
-        // expect(gist.id).to.equal(id);
-        // expect(gist.public).to.equal(true);
+        expect(gistJson).to.exist;
+        expect(gistJson.id).to.equal(id);
+        expect(gistJson.public).to.equal(true);
       });
     });
 
     describe('When the gist is eliminated', () => {
       let response;
-      params = {
+
+      const paramsDelete = {
         method: 'DELETE',
         headers: {
           Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
@@ -104,7 +108,7 @@ describe('Scenario: Consume DELETE Service', () => {
       };
 
       before(async () => {
-        response = await isomorphicFetch(`${baseUrl}/gists/${id}`, params);
+        response = await isomorphicFetch(`${baseUrl}/gists/${id}`, paramsDelete);
       });
 
       it("Then the gist doesn't exist", () => {
