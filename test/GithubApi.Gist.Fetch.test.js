@@ -3,8 +3,6 @@ const chai = require('chai');
 const statusCode = require('http-status-codes');
 const newGist = require('./commons/fixtures/Gist');
 
-require('dotenv').config();
-
 const { expect } = chai;
 
 const baseUrl = 'https://api.github.com';
@@ -30,7 +28,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
-        expect(gistJson).to.containSubset(newGist);
+        expect(gistJson).to.containSubset(newGist.gist);
       });
     });
   });
@@ -88,7 +86,10 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
       };
 
       before(async () => {
-        response = await isomorphicFetch(`${baseUrl}/gists/${id}`, paramsDelete);
+        response = await isomorphicFetch(
+          `${baseUrl}/gists/${id}`,
+          paramsDelete
+        );
       });
 
       it("Then the gist doesn't exist", () => {

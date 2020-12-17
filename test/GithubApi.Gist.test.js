@@ -16,7 +16,7 @@ describe('Scenario: Consume DELETE Service', () => {
     describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`, () => {
       before(async () => {
         gist = await request.post('gists', newGist.gist);
-      }, 10000);
+      });
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
