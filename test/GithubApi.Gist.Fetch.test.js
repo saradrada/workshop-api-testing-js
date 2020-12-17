@@ -7,7 +7,7 @@ const { expect } = chai;
 const baseUrl = 'https://api.github.com';
 const githubUserName = 'aperdomob';
 
-describe('Scenario: Consume DELETE Service', () => {
+describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
   describe('Given a gist object', () => {
     let gist;
     const newGist = {
@@ -24,7 +24,7 @@ describe('Scenario: Consume DELETE Service', () => {
     const params = {
       method: 'POST',
       headers: {
-        Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
+        Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
       },
       body: JSON.stringify(newGist)
     };
@@ -63,7 +63,7 @@ describe('Scenario: Consume DELETE Service', () => {
     const paramsPost = {
       method: 'POST',
       headers: {
-        Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
+        Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
       },
       body: JSON.stringify(newGist)
     };
@@ -78,7 +78,7 @@ describe('Scenario: Consume DELETE Service', () => {
       const paramsGet = {
         method: 'GET',
         headers: {
-          Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
+          Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
         }
       };
 
@@ -103,7 +103,7 @@ describe('Scenario: Consume DELETE Service', () => {
       const paramsDelete = {
         method: 'DELETE',
         headers: {
-          Authorization: 'token 797dcb3884720074d254a4e2cf9cbbc4cfc62cb5'
+          Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
         }
       };
 
