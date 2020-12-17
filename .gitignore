@@ -155,4 +155,10 @@ $RECYCLE.BIN/
 ## Reports ##
 report
 
+## Launch
+launch.json
+
+## Enviroment variables
+.env
+
 # End of https://www.toptal.com/developers/gitignore/api/windows,visualstudiocode,node
