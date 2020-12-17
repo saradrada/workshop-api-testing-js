@@ -3,7 +3,6 @@ const request = require('./Request').instance;
 const { listPublicEventsSchema } = require('./schema/ListPublicEvents.schema');
 
 const { expect } = chai;
-// eslint-disable-next-line no-use-before-define
 chai.use(require('chai-json-schema'));
 
 describe('Given event Github API resources', () => {
@@ -14,6 +13,6 @@ describe('Given event Github API resources', () => {
       response = await request.get('events');
     });
 
-    it.only('then the body should have a schema', () => expect(response).to.be.jsonSchema(listPublicEventsSchema));
+    it('then the body should have a schema', () => expect(response).to.be.jsonSchema(listPublicEventsSchema));
   });
 });
