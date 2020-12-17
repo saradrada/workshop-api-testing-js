@@ -4,7 +4,7 @@ const chaiSubset = require('chai-subset');
 chai.use(chaiSubset);
 const { expect } = chai;
 const statusCode = require('http-status-codes');
-const newGist = require('./commons/fixtures/Gist');
+const newGist = require('./commons/fixtures/Gist').gist;
 const request = require('./Request').instance;
 
 const githubUserName = 'aperdomob';
@@ -15,12 +15,12 @@ describe('Scenario: Consume DELETE Service', () => {
 
     describe(`When the user sends a POST to create a gist on ${githubUserName}'s github account`, () => {
       before(async () => {
-        gist = await request.post('gists', newGist.gist);
+        gist = await request.post('gists', newGist);
       });
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
-        expect(gist.body).to.containSubset(newGist.gist);
+        expect(gist.body).to.containSubset(newGist);
       });
     });
   });
@@ -30,7 +30,7 @@ describe('Scenario: Consume DELETE Service', () => {
     let id;
 
     before(async () => {
-      const res = await request.post('gists', newGist.gist);
+      const res = await request.post('gists', newGist);
       id = res.body.id;
     });
 

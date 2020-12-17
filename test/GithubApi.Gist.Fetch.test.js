@@ -1,7 +1,7 @@
 const isomorphicFetch = require('isomorphic-fetch');
 const chai = require('chai');
 const statusCode = require('http-status-codes');
-const newGist = require('./commons/fixtures/Gist');
+const newGist = require('./commons/fixtures/Gist').gist;
 
 const { expect } = chai;
 
@@ -16,7 +16,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
       headers: {
         Authorization: `token ${process.env.ACCESS_TOKEN}`
       },
-      body: JSON.stringify(newGist.gist)
+      body: JSON.stringify(newGist)
     };
 
     describe(`When a POST request is sent to create a gist on ${githubUserName}'s github account`, () => {
@@ -28,7 +28,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
-        expect(gistJson).to.containSubset(newGist.gist);
+        expect(gistJson).to.containSubset(newGist);
       });
     });
   });
@@ -43,7 +43,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
       headers: {
         Authorization: `token ${process.env.ACCESS_TOKEN}`
       },
-      body: JSON.stringify(newGist.gist)
+      body: JSON.stringify(newGist)
     };
 
     before(async () => {
