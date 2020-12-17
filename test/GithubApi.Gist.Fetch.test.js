@@ -1,6 +1,9 @@
 const isomorphicFetch = require('isomorphic-fetch');
 const chai = require('chai');
 const statusCode = require('http-status-codes');
+const newGist = require('./commons/fixtures/Gist');
+
+require('dotenv').config();
 
 const { expect } = chai;
 
@@ -10,23 +13,12 @@ const githubUserName = 'aperdomob';
 describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
   describe('Given a gist object', () => {
     let gist;
-    const newGist = {
-      description: 'Gist description',
-      public: true,
-      files: {
-        'example.tsx': {
-          filename: 'example.tsx',
-          type: 'text/plain',
-          content: 'Example content'
-        }
-      }
-    };
     const params = {
       method: 'POST',
       headers: {
-        Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
+        Authorization: `token ${process.env.ACCESS_TOKEN}`
       },
-      body: JSON.stringify(newGist)
+      body: JSON.stringify(newGist.gist)
     };
 
     describe(`When a POST request is sent to create a gist on ${githubUserName}'s github account`, () => {
@@ -34,7 +26,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
       before(async () => {
         gist = await isomorphicFetch(`${baseUrl}/gists`, params);
         gistJson = await gist.json();
-      }, 20000);
+      });
 
       it('Then the gist is created successfuly', () => {
         expect(gist.status).to.equal(statusCode.CREATED);
@@ -48,37 +40,25 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
     let gistJson;
     let id;
 
-    const newGist = {
-      description: 'Gist description',
-      public: true,
-      files: {
-        'example.tsx': {
-          filename: 'example.tsx',
-          type: 'text/plain',
-          content: 'Example content'
-        }
-      }
-    };
-
     const paramsPost = {
       method: 'POST',
       headers: {
-        Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
+        Authorization: `token ${process.env.ACCESS_TOKEN}`
       },
-      body: JSON.stringify(newGist)
+      body: JSON.stringify(newGist.gist)
     };
 
     before(async () => {
       gist = await isomorphicFetch(`${baseUrl}/gists`, paramsPost);
       gistJson = await gist.json();
       id = gistJson.id;
-    }, 20000);
+    });
 
     describe('When the gist is retrieved', () => {
       const paramsGet = {
         method: 'GET',
         headers: {
-          Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
+          Authorization: `token ${process.env.ACCESS_TOKEN}`
         }
       };
 
@@ -88,7 +68,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
           paramsGet
         );
         gistJson = await response.json();
-      }, 20000);
+      });
 
       it('Then the gist exists', () => {
         expect(gistJson).to.exist;
@@ -103,7 +83,7 @@ describe('Scenario: Consume DELETE Service with Isomorphic-Fetch', () => {
       const paramsDelete = {
         method: 'DELETE',
         headers: {
-          Authorization: 'token 3d0b1b9c7fe5cbc26ecf1c2d5773ced4242c07d5'
+          Authorization: `token ${process.env.ACCESS_TOKEN}`
         }
       };
 
